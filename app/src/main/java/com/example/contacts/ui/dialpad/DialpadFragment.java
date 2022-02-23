@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -57,15 +58,17 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
         FloatingActionButton hashtagBtn = root.findViewById(R.id.fragment_dialpad_hashtagBtn);
         hashtagBtn.setOnClickListener(this);
 
+        ImageButton delteBtn = root.findViewById(R.id.fragment_dialpad_deleteBtn);
         FloatingActionButton callBtn = root.findViewById(R.id.fragment_dialpad_callBtn);
-        callBtn.setOnClickListener(new View.OnClickListener() {
+
+        delteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     finalText = finalText.substring(0, finalText.length() - 1);
                     titleNum.setText(finalText);
                 }finally {
-                    return;
+                    return;//banana
                 }
 
             }

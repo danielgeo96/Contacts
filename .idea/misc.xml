@@ -5,14 +5,15 @@
       <map>
         <entry key="..\:/Users/danie/AndroidStudioProjects/contacts/app/src/main/res/layout/activity_main.xml" value="0.26811594202898553" />
         <entry key="..\:/Users/danie/AndroidStudioProjects/contacts/app/src/main/res/layout/fragment_add_or_edit.xml" value="0.20208333333333334" />
-        <entry key="..\:/Users/danie/AndroidStudioProjects/contacts/app/src/main/res/layout/fragment_contacts.xml" value="0.3625" />
+        <entry key="..\:/Users/danie/AndroidStudioProjects/contacts/app/src/main/res/layout/fragment_contacts.xml" value="0.264" />
         <entry key="..\:/Users/danie/AndroidStudioProjects/contacts/app/src/main/res/layout/fragment_dashboard.xml" value="0.26811594202898553" />
         <entry key="..\:/Users/danie/AndroidStudioProjects/contacts/app/src/main/res/layout/fragment_dialpad.xml" value="0.4" />
         <entry key="..\:/Users/danie/AndroidStudioProjects/contacts/app/src/main/res/layout/fragment_favorites.xml" value="0.20208333333333334" />
         <entry key="..\:/Users/danie/AndroidStudioProjects/contacts/app/src/main/res/layout/fragment_home.xml" value="0.26811594202898553" />
         <entry key="..\:/Users/danie/AndroidStudioProjects/contacts/app/src/main/res/layout/fragment_info.xml" value="0.20208333333333334" />
         <entry key="..\:/Users/danie/AndroidStudioProjects/contacts/app/src/main/res/layout/fragment_notifications.xml" value="0.26811594202898553" />
-        <entry key="..\:/Users/danie/AndroidStudioProjects/contacts/app/src/main/res/menu/bottom_nav_menu.xml" value="0.3625" />
+        <entry key="..\:/Users/danie/AndroidStudioProjects/contacts/app/src/main/res/layout/row_list.xml" value="0.4" />
+        <entry key="..\:/Users/danie/AndroidStudioProjects/contacts/app/src/main/res/menu/bottom_nav_menu.xml" value="0.4" />
         <entry key="..\:/Users/danie/AndroidStudioProjects/contacts/app/src/main/res/menu/dialpad_menu.xml" value="0.2713541666666667" />
         <entry key="..\:/Users/danie/AndroidStudioProjects/contacts/app/src/main/res/menu/upper_nav_menu.xml" value="0.20208333333333334" />
       </map>

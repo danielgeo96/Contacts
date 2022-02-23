@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_dialpad">
+
+    <fragment
+        android:id="@+id/navigation_dialpad"
+        android:name="com.example.contacts.ui.dialpad.DialpadFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_dialpad" >
+        <action
+            android:id="@+id/action_navigation_dialpad_to_addOrEditFragment"
+            app:destination="@id/addOrEditFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_contacts"
+        android:name="com.example.contacts.ui.contacts.ContactsFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_Contacts" >
+        <action
+            android:id="@+id/action_navigation_contacts_to_infoFragment"
+            app:destination="@id/infoFragment" />
+        <action
+            android:id="@+id/action_navigation_contacts_to_addOrEditFragment2"
+            app:destination="@id/addOrEditFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_favorites"
+        android:name="com.example.contacts.ui.favorites.FavoritesFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_Favorites" >
+        <action
+            android:id="@+id/action_navigation_favorites_to_infoFragment"
+            app:destination="@id/infoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addOrEditFragment"
+        android:name="com.example.contacts.addOrEditFragment"
+        android:label="fragment_add_or_edit"
+        tools:layout="@layout/fragment_add_or_edit" />
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="com.example.contacts.infoFragment"
+        android:label="fragment_info"
+        tools:layout="@layout/fragment_info" />
+</navigation>

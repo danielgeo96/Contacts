@@ -19,13 +19,15 @@
 
     <TextView
         android:id="@+id/row_list_textView"
-        android:layout_width="122dp"
+        android:layout_width="wrap_content"
         android:layout_height="38dp"
         android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
         android:text="TextView"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/row_list_imageView"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.485" />
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

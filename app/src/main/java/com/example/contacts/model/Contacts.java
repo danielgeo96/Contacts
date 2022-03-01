@@ -5,6 +5,7 @@ public class Contacts {
     String phoneNumber;
     String firstName;
     String lastName;
+    String email;
     int count;
 
     public String getPhoneNumber() {
@@ -37,5 +38,13 @@ public class Contacts {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

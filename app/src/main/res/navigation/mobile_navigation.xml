@@ -19,10 +19,14 @@
         android:id="@+id/navigation_contacts"
         android:name="com.example.contacts.ui.contacts.ContactsFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_Contacts" >
+        tools:layout="@layout/fragment_contacts" >
         <action
-            android:id="@+id/action_navigation_contacts_to_infoFragment"
-            app:destination="@id/infoFragment" />
+            android:id="@+id/contactsToInfo"
+            app:destination="@id/infoFragment" >
+            <argument
+                android:name="reciveParamPos"
+                android:defaultValue="0" />
+        </action>
         <action
             android:id="@+id/action_navigation_contacts_to_addOrEditFragment2"
             app:destination="@id/addOrEditFragment" />
@@ -32,7 +36,7 @@
         android:id="@+id/navigation_favorites"
         android:name="com.example.contacts.ui.favorites.FavoritesFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_Favorites" >
+        tools:layout="@layout/fragment_favorites" >
         <action
             android:id="@+id/action_navigation_favorites_to_infoFragment"
             app:destination="@id/infoFragment" />
@@ -45,6 +49,13 @@
     <fragment
         android:id="@+id/infoFragment"
         android:name="com.example.contacts.infoFragment"
-        android:label="fragment_info"
-        tools:layout="@layout/fragment_info" />
+        android:label="Contacs Info"
+        tools:layout="@layout/fragment_info">
+        <action
+            android:id="@+id/action_infoFragment_to_addOrEditFragment"
+            app:destination="@id/addOrEditFragment" />
+        <argument
+            android:name="recivePosParam"
+            app:argType="integer" />
+    </fragment>
 </navigation>

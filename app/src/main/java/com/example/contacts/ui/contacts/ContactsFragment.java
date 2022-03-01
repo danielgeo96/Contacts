@@ -1,6 +1,5 @@
 package com.example.contacts.ui.contacts;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,15 +62,14 @@ public class ContactsFragment extends Fragment {
             @Override
             public void OnItemClick(int position) {
                 Log.d("Tag","row was clicked" + position);
+
+                ContactsFragmentDirections.ContactsToInfo action = ContactsFragmentDirections.contactsToInfo(position);
+
+                Navigation.findNavController(root).navigate(action);
             }
         });
 
         return root;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
 }

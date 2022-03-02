@@ -11,7 +11,7 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_dialpad" >
         <action
-            android:id="@+id/action_navigation_dialpad_to_addOrEditFragment"
+            android:id="@+id/dialpadToAddOrEdit"
             app:destination="@id/addOrEditFragment" />
     </fragment>
 
@@ -28,7 +28,7 @@
                 android:defaultValue="0" />
         </action>
         <action
-            android:id="@+id/action_navigation_contacts_to_addOrEditFragment2"
+            android:id="@+id/contactsToAddOrEdit"
             app:destination="@id/addOrEditFragment" />
     </fragment>
 
@@ -45,7 +45,14 @@
         android:id="@+id/addOrEditFragment"
         android:name="com.example.contacts.addOrEditFragment"
         android:label="fragment_add_or_edit"
-        tools:layout="@layout/fragment_add_or_edit" />
+        tools:layout="@layout/fragment_add_or_edit" >
+        <argument
+            android:name="phoneNumberFromDialPad"
+            app:argType="string" />
+        <argument
+            android:name="getPositionFromInfo"
+            app:argType="integer" />
+    </fragment>
     <fragment
         android:id="@+id/infoFragment"
         android:name="com.example.contacts.infoFragment"

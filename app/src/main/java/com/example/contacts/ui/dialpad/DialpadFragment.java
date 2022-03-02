@@ -3,6 +3,9 @@ package com.example.contacts.ui.dialpad;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -10,11 +13,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.contacts.R;
 import com.example.contacts.databinding.FragmentDialpadBinding;
+import com.example.contacts.ui.contacts.ContactsFragmentDirections;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class DialpadFragment extends Fragment implements View.OnClickListener {
@@ -23,6 +29,7 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
     private FragmentDialpadBinding binding;
     TextView titleNum;
     String finalText;
+    View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -30,7 +37,7 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
                 new ViewModelProvider(this).get(DialpadViewModel.class);
 
         binding = FragmentDialpadBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        root = binding.getRoot();
 
         titleNum = root.findViewById(R.id.fragment_dialpad_titleTextView);
         FloatingActionButton oneBtn = root.findViewById(R.id.fragment_dialpad_oneBtn);
@@ -58,16 +65,17 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
         FloatingActionButton hashtagBtn = root.findViewById(R.id.fragment_dialpad_hashtagBtn);
         hashtagBtn.setOnClickListener(this);
 
-        ImageButton delteBtn = root.findViewById(R.id.fragment_dialpad_deleteBtn);
+        ImageButton deleteBtn = root.findViewById(R.id.fragment_dialpad_deleteBtn);
         FloatingActionButton callBtn = root.findViewById(R.id.fragment_dialpad_callBtn);
 
-        delteBtn.setOnClickListener(new View.OnClickListener() {
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     finalText = finalText.substring(0, finalText.length() - 1);
                     titleNum.setText(finalText);
                 }finally {
+                    setHasOptionsMenu(false);
                     return;//banana
                 }
 
@@ -77,15 +85,10 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
         return root;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
+    //when click on row do this function
     @Override
     public void onClick(View v) {
-
+        setHasOptionsMenu(true);
         String selected = (String)v.getTag();
 
         Log.d("TAG", "the num is " +selected);
@@ -93,4 +96,30 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
         finalText = titleNum.getText().toString();
 
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(false);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.dialpad_menu ,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        DialpadFragmentDirections.DialpadToAddOrEdit action = DialpadFragmentDirections.dialpadToAddOrEdit(finalText,-1);
+        Navigation.findNavController(root).navigate(action);
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
 }

@@ -34,7 +34,6 @@ public class ContactsFragment extends Fragment {
     private FragmentContactsBinding binding;
     RecyclerView list;
     View root;
-    int finalPos;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

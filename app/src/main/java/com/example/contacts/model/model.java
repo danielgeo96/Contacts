@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class model {
-    int i=0;
+    int index=0;
 
     List<Contacts> data = new LinkedList<Contacts>();
 
@@ -22,9 +22,9 @@ public class model {
     }
 
     public void setData(Contacts temp) {
-        temp.setCount(i);
+        temp.setCount(index);
         data.add(temp);
-        i++;
+        index++;
     }
 
     public void changeData(Contacts temp , int position){
@@ -41,6 +41,21 @@ public class model {
 
     public void removeContact(int count){
         data.remove(count);
+    }
+
+    public List<Contacts> getAllFavorites(){
+
+        List<Contacts> temp = new LinkedList<Contacts>();
+        int tempIndex=0;
+
+        for(int i =0;i < data.size();i++){
+            if(data.get(i).getFavorite()){
+                temp.add(tempIndex,data.get(i));
+                tempIndex++;
+            }
+        }
+
+        return temp;
     }
 
 

@@ -6,6 +6,7 @@ public class Contacts {
     String firstName;
     String lastName;
     String email;
+    Boolean isFavorite;
     int count;
 
     public String getPhoneNumber() {
@@ -46,5 +47,13 @@ public class Contacts {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    public Boolean getFavorite() {
+        return isFavorite;
     }
 }

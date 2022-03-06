@@ -47,11 +47,13 @@ public class addOrEditFragment extends Fragment {
         }else if(phoneNumber == "" && position == -1){
             titleText.setText("Add new contact: ");
         }else{
+            titleText.setText("Edit contact");
             contact = model.instance.getContactByCount(position);
             firstNameText.setText(contact.getFirstName());
             lastNameText.setText(contact.getLastName());
             phoneNumberText.setText(contact.getPhoneNumber());
             emailText.setText(contact.getEmail());
+            addToFavBtn.setVisibility(root.GONE);
         }
 
         //contact.setFirstName() = firstNameText.getText();

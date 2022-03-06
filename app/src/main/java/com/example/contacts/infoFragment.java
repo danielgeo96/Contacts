@@ -30,6 +30,7 @@ public class infoFragment extends Fragment {
      TextView phoneNumberTextView = root.findViewById(R.id.fragment_info_phoneNumber);
      TextView emailTextView = root.findViewById(R.id.fragemnt_info_emailAdress);
      Button editBtn = root.findViewById(R.id.fragment_info_editBtn);
+     Button favBtn = root.findViewById(R.id.fragment_info_addToFavorite);
 
      int position = infoFragmentArgs.fromBundle(getArguments()).getRecivePosParam();
 
@@ -44,6 +45,14 @@ public class infoFragment extends Fragment {
          public void onClick(View v) {
              infoFragmentDirections.ActionInfoFragmentToAddOrEditFragment action = infoFragmentDirections.actionInfoFragmentToAddOrEditFragment("",position);
              Navigation.findNavController(root).navigate(action);
+         }
+     });
+
+     favBtn.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+             contacts.setFavorite(true);
+             model.instance.changeData(contacts,position);
          }
      });
 

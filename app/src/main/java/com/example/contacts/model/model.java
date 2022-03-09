@@ -13,14 +13,7 @@ public class model {
     public final static model instance = new model();
 
     private model(){
-//        Contacts temp = new Contacts();
-//        temp.setFirstName("Daniel");
-//        temp.setLastName("George");
-//        temp.setPhoneNumber("0502776661");
-//        temp.setEmail("Daniel96Geo@gmail.com");
-//        for(int j=0;j<10;j++){
-//            data.add(j,temp);
-//        }
+
     }
 
     public void setData(Contacts temp) {

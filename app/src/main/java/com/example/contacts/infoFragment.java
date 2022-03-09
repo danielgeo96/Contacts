@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.contacts.model.Contacts;
 import com.example.contacts.model.model;
@@ -43,6 +44,7 @@ public class infoFragment extends Fragment {
      Button editBtn = root.findViewById(R.id.fragment_info_editBtn);
      Button delBtn = root.findViewById(R.id.fragment_info_delBtn);
      Button callBtn = root.findViewById(R.id.fragment_info_callBtn);
+     Button emailBtn = root.findViewById(R.id.fragment_info_emailBtn);
 
      position = infoFragmentArgs.fromBundle(getArguments()).getRecivePosParam();
      Boolean isFav = infoFragmentArgs.fromBundle(getArguments()).getIsFav();
@@ -90,6 +92,19 @@ public class infoFragment extends Fragment {
              Intent callIntent = new Intent(Intent.ACTION_CALL);
              callIntent.setData(Uri.parse("tel:"+phoneNumberTextView.getText().toString()));//change the number
              startActivity(callIntent);
+         }
+     });
+
+     emailBtn.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+             try {
+                 Intent intent = new Intent(Intent.ACTION_MAIN);
+                 intent.addCategory(Intent.CATEGORY_APP_EMAIL);
+                 startActivity(intent);
+             } catch (android.content.ActivityNotFoundException e) {
+                Toast.makeText(getContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+             }
          }
      });
 

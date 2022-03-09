@@ -83,7 +83,7 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
                     titleNum.setText(finalText);
                 }finally {
                     setHasOptionsMenu(false);
-                    return;//banana
+                    return;
                 }
 
             }

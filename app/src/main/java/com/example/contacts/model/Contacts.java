@@ -58,4 +58,5 @@ public class Contacts {
     public Boolean getFavorite() {
         return isFavorite;
     }
+
 }

@@ -1,5 +1,7 @@
 package com.example.contacts;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -40,6 +42,7 @@ public class infoFragment extends Fragment {
      TextView emailTextView = root.findViewById(R.id.fragemnt_info_emailAdress);
      Button editBtn = root.findViewById(R.id.fragment_info_editBtn);
      Button delBtn = root.findViewById(R.id.fragment_info_delBtn);
+     Button callBtn = root.findViewById(R.id.fragment_info_callBtn);
 
      position = infoFragmentArgs.fromBundle(getArguments()).getRecivePosParam();
      Boolean isFav = infoFragmentArgs.fromBundle(getArguments()).getIsFav();
@@ -80,6 +83,17 @@ public class infoFragment extends Fragment {
 
          }
      });
+
+     callBtn.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+             Intent callIntent = new Intent(Intent.ACTION_CALL);
+             callIntent.setData(Uri.parse("tel:"+phoneNumberTextView.getText().toString()));//change the number
+             startActivity(callIntent);
+         }
+     });
+
+
 
      return root;
     }

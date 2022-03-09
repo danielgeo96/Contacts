@@ -1,12 +1,14 @@
 package com.example.contacts.model;
 
+import android.provider.ContactsContract;
+
 public class Contacts {
 
     String phoneNumber;
     String firstName;
     String lastName;
     String email;
-    Boolean isFavorite;
+    Boolean isFavorite = false;
     int count;
 
     public String getPhoneNumber() {

@@ -4,59 +4,104 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class model {
-    int index=0;
+    int dataIndex=0;
+    int favListIndex=0;
 
     List<Contacts> data = new LinkedList<Contacts>();
+    List<Contacts> favList = new LinkedList<Contacts>();
 
     public final static model instance = new model();
 
     private model(){
-        Contacts temp = new Contacts();
-        temp.setFirstName("Daniel");
-        temp.setLastName("George");
-        temp.setPhoneNumber("0502776661");
-        temp.setEmail("Daniel96Geo@gmail.com");
-        for(int j=0;j<10;j++){
-            data.add(i,temp);
-        }
+//        Contacts temp = new Contacts();
+//        temp.setFirstName("Daniel");
+//        temp.setLastName("George");
+//        temp.setPhoneNumber("0502776661");
+//        temp.setEmail("Daniel96Geo@gmail.com");
+//        for(int j=0;j<10;j++){
+//            data.add(j,temp);
+//        }
     }
 
     public void setData(Contacts temp) {
-        temp.setCount(index);
+        temp.setCount(dataIndex);
         data.add(temp);
-        index++;
+        dataIndex++;
+    }
+
+    public void setFavList(Contacts temp) {
+//        temp.setCount(favListIndex);
+//        favList.add(temp);
+//        favListIndex++;
+        temp.setCount(dataIndex);
+        favList.add(temp);
     }
 
     public void changeData(Contacts temp , int position){
         data.set(position,temp);
     }
 
+    public void changeFavList(Contacts temp , int position){
+        favList.set(position,temp);
+    }
+
     public List<Contacts> getAllContacts() {
         return data;
+    }
+
+    public List<Contacts> getAllFavorites(){
+
+//        int tempIndex=0;
+//
+//        for(int i =0;i < data.size();i++){
+//            for(int j=0;j<favList.size();j++) {
+//                if (data.get(i).getFavorite() && data.get(i).getCount() != favList.get(j).getCount()) {
+//                    favList.add(tempIndex, data.get(i));
+//                    tempIndex++;
+//                }
+//            }
+//        }
+
+        return favList;
     }
 
     public Contacts getContactByCount(int count) {
         return data.get(count);
     }
 
+    public Contacts getFavContactByCount(int count) {
+        return favList.get(count);
+    }
+
     public void removeContact(int count){
         data.remove(count);
     }
 
-    public List<Contacts> getAllFavorites(){
+    public void removeFavContact(int count){
+        favList.remove(count);
+    }
 
-        List<Contacts> temp = new LinkedList<Contacts>();
-        int tempIndex=0;
+    public void removeBothFavAndContact(Contacts contacts){
 
-        for(int i =0;i < data.size();i++){
-            if(data.get(i).getFavorite()){
-                temp.add(tempIndex,data.get(i));
-                tempIndex++;
+        for(int i=0;i<data.size();i++){
+
+            for (int j=0;j<favList.size();j++){
+
+                if(data.get(i).getCount() == favList.get(j).getCount()){
+
+                    data.remove(i);
+                    favList.remove(j);
+                    break;
+                }
+
             }
+
         }
 
-        return temp;
+
     }
+
+
 
 
 }

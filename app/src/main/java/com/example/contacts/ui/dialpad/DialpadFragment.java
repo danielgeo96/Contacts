@@ -111,7 +111,7 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        DialpadFragmentDirections.DialpadToAddOrEdit action = DialpadFragmentDirections.dialpadToAddOrEdit(finalText,-1);
+        DialpadFragmentDirections.DialpadToAddOrEdit action = DialpadFragmentDirections.dialpadToAddOrEdit(finalText,-1,"DialPad");
         Navigation.findNavController(root).navigate(action);
         return super.onOptionsItemSelected(item);
     }

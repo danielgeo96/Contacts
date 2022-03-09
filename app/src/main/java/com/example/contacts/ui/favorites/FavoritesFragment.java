@@ -64,8 +64,9 @@ public class FavoritesFragment extends Fragment {
             public void OnItemClick(int position) {
 
                 Log.d("Tag","row was clicked" + position);
-                ContactsFragmentDirections.ContactsToInfo action = ContactsFragmentDirections.contactsToInfo(position);
+                FavoritesFragmentDirections.ActionNavigationFavoritesToInfoFragment action = FavoritesFragmentDirections.actionNavigationFavoritesToInfoFragment(position,true,"Favorites");
                 Navigation.findNavController(root).navigate(action);
+
 
             }
         });

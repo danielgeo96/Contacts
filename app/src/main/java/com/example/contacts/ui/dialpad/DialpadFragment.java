@@ -1,5 +1,10 @@
 package com.example.contacts.ui.dialpad;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,10 +19,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.example.contacts.MainActivity;
 import com.example.contacts.R;
 import com.example.contacts.databinding.FragmentDialpadBinding;
 import com.example.contacts.ui.contacts.ContactsFragmentDirections;
@@ -30,7 +38,6 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
     TextView titleNum;
     String finalText;
     View root;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         dialpadViewModel =
@@ -79,6 +86,15 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
                     return;//banana
                 }
 
+            }
+        });
+
+        callBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:"+finalText));//change the number
+                startActivity(callIntent);
             }
         });
 

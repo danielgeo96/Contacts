@@ -52,6 +52,13 @@
         <argument
             android:name="getPositionFromInfo"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_addOrEditFragment_pop"
+            app:popUpTo="@id/addOrEditFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="fromLastFrag"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/infoFragment"
@@ -64,5 +71,15 @@
         <argument
             android:name="recivePosParam"
             app:argType="integer" />
+        <argument
+            android:name="isFav"
+            app:argType="boolean" />
+        <argument
+            android:name="fromFrag"
+            app:argType="string" />
+        <action
+            android:id="@+id/isRemove"
+            app:popUpTo="@id/infoFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

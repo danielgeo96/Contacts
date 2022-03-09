@@ -26,6 +26,7 @@ import com.example.contacts.model.model;
 import com.example.contacts.ui.dialpad.DialpadFragmentDirections;
 
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 
 
 public class ContactsFragment extends Fragment {
@@ -37,6 +38,7 @@ public class ContactsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         contactsViewModel =
                 new ViewModelProvider(this).get(ContactsViewModel.class);
 
@@ -68,18 +70,13 @@ public class ContactsFragment extends Fragment {
             @Override
             public void OnItemClick(int position) {
                 Log.d("Tag","row was clicked" + position);
-                ContactsFragmentDirections.ContactsToInfo action = ContactsFragmentDirections.contactsToInfo(position);
+                ContactsFragmentDirections.ContactsToInfo action = ContactsFragmentDirections.contactsToInfo(position,false,"Contacts");
                 Navigation.findNavController(root).navigate(action);
+                
             }
         });
 
         return root;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -90,7 +87,7 @@ public class ContactsFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        ContactsFragmentDirections.ContactsToAddOrEdit action = ContactsFragmentDirections.contactsToAddOrEdit("",-1);
+        ContactsFragmentDirections.ContactsToAddOrEdit action = ContactsFragmentDirections.contactsToAddOrEdit("",-1,"ContactsCreate");
         Navigation.findNavController(root).navigate(action);
 
         return super.onOptionsItemSelected(item);

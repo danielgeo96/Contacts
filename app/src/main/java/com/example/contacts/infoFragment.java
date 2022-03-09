@@ -45,6 +45,7 @@ public class infoFragment extends Fragment {
      Button delBtn = root.findViewById(R.id.fragment_info_delBtn);
      Button callBtn = root.findViewById(R.id.fragment_info_callBtn);
      Button emailBtn = root.findViewById(R.id.fragment_info_emailBtn);
+     Button msgBtn = root.findViewById(R.id.fragment_info_msgBtn);
 
      position = infoFragmentArgs.fromBundle(getArguments()).getRecivePosParam();
      Boolean isFav = infoFragmentArgs.fromBundle(getArguments()).getIsFav();
@@ -108,7 +109,14 @@ public class infoFragment extends Fragment {
          }
      });
 
-
+    msgBtn.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_APP_MESSAGING);
+            startActivity(intent);
+        }
+    });
 
      return root;
     }

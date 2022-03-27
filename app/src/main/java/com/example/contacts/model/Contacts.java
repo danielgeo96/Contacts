@@ -5,8 +5,7 @@ import android.provider.ContactsContract;
 public class Contacts {
 
     String phoneNumber;
-    String firstName;
-    String lastName;
+    String fullName;
     String email;
     Boolean isFavorite = false;
     int count;
@@ -19,20 +18,12 @@ public class Contacts {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setFullName(String firstName) {
+        this.fullName = firstName;
     }
 
     public int getCount() {

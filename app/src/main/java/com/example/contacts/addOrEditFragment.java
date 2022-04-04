@@ -39,13 +39,10 @@ public class addOrEditFragment extends Fragment {
         TextView titleText = root.findViewById(R.id.addOrEdit_fragment_title);
 
         String phoneNumber = addOrEditFragmentArgs.fromBundle(getArguments()).getPhoneNumberFromDialPad();
-        int position = addOrEditFragmentArgs.fromBundle(getArguments()).getGetPositionFromInfo();
         String fromFrag = addOrEditFragmentArgs.fromBundle(getArguments()).getFromLastFrag();
-
-        Log.d("Tag","the phone is " + phoneNumber);
+        int position = addOrEditFragmentArgs.fromBundle(getArguments()).getGetPositionFromInfo();
 
         if(fromFrag == "DialPad"){
-
             titleText.setText("Add new contact: ");
             phoneNumberText.setText(phoneNumber);
 
@@ -68,33 +65,17 @@ public class addOrEditFragment extends Fragment {
                 contact.setPhoneNumber(phoneNumberText.getText().toString());
                 contact.setFullName(firstNameText.getText().toString());
                 contact.setEmail(emailText.getText().toString());
+                if(addToFav.isChecked()){
+                    contact.setFavorite(true);
+                }else {
+                    contact.setFavorite(false);
+                }
+
+
                 if(fromFrag == "DialPad" || fromFrag == "ContactsCreate") {
-                    if(addToFav.isChecked()){
-                        contact.setFavorite(true);
-                      //  model.instance.setFavList(contact);
-                    }else {
-                        contact.setFavorite(false);
-                    }
-                    //model.instance.setData(contact);
-
                     model.getInstance().saveContact(contact,root.getContext());
-
                 }else{
-                    if(fromFrag == "Favorites"){
-                        if(addToFav.isChecked()){
-                            model.getInstance().changeFavList(contact,position);
-                        }else {
-                            contact.setFavorite(false);
-                            model.getInstance().removeFavContact(position);
-                        }
-                    }else{
-                        if(addToFav.isChecked()){
-                            contact.setFavorite(true);
-                            model.getInstance().setFavList(contact);
-                        }else{
-                            model.getInstance().changeData(contact,position);
-                        }
-                    }
+                    model.getInstance().updateContact(contact,getContext());
                 }
                 Navigation.findNavController(root).navigate(R.id.action_addOrEditFragment_pop);
             }

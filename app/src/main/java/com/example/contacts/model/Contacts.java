@@ -8,7 +8,8 @@ public class Contacts {
     String fullName;
     String email;
     Boolean isFavorite = false;
-    int count;
+    String dbPosition;
+    int listPosition;
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -26,12 +27,12 @@ public class Contacts {
         this.fullName = firstName;
     }
 
-    public int getCount() {
-        return count;
+    public String getDbPosition() {
+        return dbPosition;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setDbPosition(String count) {
+        this.dbPosition = count;
     }
 
     public String getEmail() {
@@ -50,4 +51,11 @@ public class Contacts {
         return isFavorite;
     }
 
+    public void setListPosition(int listPosition) {
+        this.listPosition = listPosition;
+    }
+
+    public int getListPosition() {
+        return listPosition;
+    }
 }

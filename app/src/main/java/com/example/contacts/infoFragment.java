@@ -72,18 +72,8 @@ public class infoFragment extends Fragment {
      delBtn.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
-             if(fromFrag == "Favorites"){
-                 model.getInstance().removeBothFavAndContact(contacts);
-             }else{
-                 if(contacts.getFavorite()){
-                     model.getInstance().removeBothFavAndContact(contacts);
-                 }else {
-                     model.getInstance().removeContact(position);
-                 }
-             }
-
+             model.getInstance().removeContact(contacts,getContext());
              Navigation.findNavController(root).navigate(R.id.isRemove);
-
          }
      });
 

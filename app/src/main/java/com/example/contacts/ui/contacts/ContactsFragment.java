@@ -1,6 +1,11 @@
 package com.example.contacts.ui.contacts;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +30,7 @@ import com.example.contacts.model.Contacts;
 import com.example.contacts.model.model;
 import com.example.contacts.ui.dialpad.DialpadFragmentDirections;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -54,7 +60,8 @@ public class ContactsFragment extends Fragment {
         list.setLayoutManager(layoutManager);
 
         //getting data from the model
-        List<Contacts> data = model.instance.getAllContacts();
+        //List<Contacts> data = model.instance.getContentFromDB(root);
+        List<Contacts> data = model.getInstance().getContentFromDB(root);
 
         //set adapter
         contactsAdapter adapter = new contactsAdapter(getLayoutInflater());

@@ -47,7 +47,7 @@ public class FavoritesFragment extends Fragment {
         list.setLayoutManager(layoutManager);
 
         //getting data from the model
-        List<Contacts> data = model.instance.getAllFavorites();
+        List<Contacts> data = model.getInstance().getFavContentFromDB(root);
 
         //set adapter
         contactsAdapter adapter = new contactsAdapter(getLayoutInflater());

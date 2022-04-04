@@ -1,10 +1,12 @@
 package com.example.contacts;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,19 +34,15 @@ public class addOrEditFragment extends Fragment {
         Button cancelBtn = root.findViewById(R.id.add_or_edit_cancelBtn);
         Switch addToFav = root.findViewById(R.id.add_or_edit_addToFavSwitch);
         EditText firstNameText = root.findViewById(R.id.fragment_add_or_edit_firstName);
-        EditText lastNameText = root.findViewById(R.id.fragment_add_or_edit_lastName);
         EditText phoneNumberText = root.findViewById(R.id.add_or_edit_phoneNumber);
         EditText emailText = root.findViewById(R.id.add_or_edit_emailText);
         TextView titleText = root.findViewById(R.id.addOrEdit_fragment_title);
 
         String phoneNumber = addOrEditFragmentArgs.fromBundle(getArguments()).getPhoneNumberFromDialPad();
-        int position = addOrEditFragmentArgs.fromBundle(getArguments()).getGetPositionFromInfo();
         String fromFrag = addOrEditFragmentArgs.fromBundle(getArguments()).getFromLastFrag();
-
-        Log.d("Tag","the phone is " + phoneNumber);
+        int position = addOrEditFragmentArgs.fromBundle(getArguments()).getGetPositionFromInfo();
 
         if(fromFrag == "DialPad"){
-
             titleText.setText("Add new contact: ");
             phoneNumberText.setText(phoneNumber);
 
@@ -52,9 +50,8 @@ public class addOrEditFragment extends Fragment {
             titleText.setText("Add new contact: ");
         }else{
             titleText.setText("Edit contact");
-            contact = model.instance.getContactByCount(position);
-            firstNameText.setText(contact.getFirstName());
-            lastNameText.setText(contact.getLastName());
+            contact = model.getInstance().getContactByCount(position);
+            firstNameText.setText(contact.getFullName());
             phoneNumberText.setText(contact.getPhoneNumber());
             emailText.setText(contact.getEmail());
             if(contact.getFavorite()){
@@ -66,33 +63,19 @@ public class addOrEditFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 contact.setPhoneNumber(phoneNumberText.getText().toString());
-                contact.setFirstName(firstNameText.getText().toString());
-                contact.setLastName(lastNameText.getText().toString());
+                contact.setFullName(firstNameText.getText().toString());
                 contact.setEmail(emailText.getText().toString());
+                if(addToFav.isChecked()){
+                    contact.setFavorite(true);
+                }else {
+                    contact.setFavorite(false);
+                }
+
+
                 if(fromFrag == "DialPad" || fromFrag == "ContactsCreate") {
-                    if(addToFav.isChecked()){
-                        contact.setFavorite(true);
-                        model.instance.setFavList(contact);
-                    }else {
-                        contact.setFavorite(false);
-                    }
-                    model.instance.setData(contact);
+                    model.getInstance().saveContact(contact,root.getContext());
                 }else{
-                    if(fromFrag == "Favorites"){
-                        if(addToFav.isChecked()){
-                            model.instance.changeFavList(contact,position);
-                        }else {
-                            contact.setFavorite(false);
-                            model.instance.removeFavContact(position);
-                        }
-                    }else{
-                        if(addToFav.isChecked()){
-                            contact.setFavorite(true);
-                            model.instance.setFavList(contact);
-                        }else{
-                            model.instance.changeData(contact,position);
-                        }
-                    }
+                    model.getInstance().updateContact(contact,getContext());
                 }
                 Navigation.findNavController(root).navigate(R.id.action_addOrEditFragment_pop);
             }

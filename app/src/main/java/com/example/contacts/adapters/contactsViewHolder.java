@@ -33,7 +33,7 @@ public class contactsViewHolder extends RecyclerView.ViewHolder {
     public void bindData(Contacts contact, int position) {
         String fullName;
 
-        fullName = contact.getFirstName() +" " + contact.getLastName();
+        fullName = contact.getFullName();
 
         //real version when DB is finish
         //fullName = contact.getFirstName() + contact.getLastName();

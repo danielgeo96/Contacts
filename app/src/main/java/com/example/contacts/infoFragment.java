@@ -52,12 +52,12 @@ public class infoFragment extends Fragment {
      String fromFrag = infoFragmentArgs.fromBundle(getArguments()).getFromFrag();
 
     if(isFav){
-         contacts = model.instance.getFavContactByCount(position);
+         contacts = model.getInstance().getFavContactByCount(position);
     }else{
-        contacts = model.instance.getContactByCount(position);
+        contacts = model.getInstance().getContactByCount(position);
     }
 
-     fullNameTextView.setText(contacts.getFirstName()+ " " + contacts.getLastName());
+     fullNameTextView.setText(contacts.getFullName());
      phoneNumberTextView.setText(contacts.getPhoneNumber());
      emailTextView.setText(contacts.getEmail());
 
@@ -72,18 +72,8 @@ public class infoFragment extends Fragment {
      delBtn.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
-             if(fromFrag == "Favorites"){
-                 model.instance.removeBothFavAndContact(contacts);
-             }else{
-                 if(contacts.getFavorite()){
-                     model.instance.removeBothFavAndContact(contacts);
-                 }else {
-                     model.instance.removeContact(position);
-                 }
-             }
-
+             model.getInstance().removeContact(contacts,getContext());
              Navigation.findNavController(root).navigate(R.id.isRemove);
-
          }
      });
 
@@ -130,7 +120,7 @@ public class infoFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        model.instance.changeData(contacts,position);
+        model.getInstance().changeData(contacts,position);
         setHasOptionsMenu(false);
 
         return super.onOptionsItemSelected(item);

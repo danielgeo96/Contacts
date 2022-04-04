@@ -5,11 +5,11 @@ import android.provider.ContactsContract;
 public class Contacts {
 
     String phoneNumber;
-    String firstName;
-    String lastName;
+    String fullName;
     String email;
     Boolean isFavorite = false;
-    int count;
+    String dbPosition;
+    int listPosition;
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -19,28 +19,20 @@ public class Contacts {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFullName(String firstName) {
+        this.fullName = firstName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getDbPosition() {
+        return dbPosition;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
+    public void setDbPosition(String count) {
+        this.dbPosition = count;
     }
 
     public String getEmail() {
@@ -59,4 +51,11 @@ public class Contacts {
         return isFavorite;
     }
 
+    public void setListPosition(int listPosition) {
+        this.listPosition = listPosition;
+    }
+
+    public int getListPosition() {
+        return listPosition;
+    }
 }

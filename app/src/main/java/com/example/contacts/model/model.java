@@ -1,101 +1,184 @@
 package com.example.contacts.model;
 
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.ContactsContract;
+import android.util.Log;
+import android.content.Context;
+import android.view.View;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class model {
-    int dataIndex=0;
-    int favListIndex=0;
+    int dataIndex = 0;
+    int favListIndex = 0;
 
-    List<Contacts> data = new LinkedList<Contacts>();
-    List<Contacts> favList = new LinkedList<Contacts>();
+    List<Contacts> data = new LinkedList<>();
+    List<Contacts> favList = new LinkedList<>();
 
-    public final static model instance = new model();
+    private final static model instance = new model();
 
-    private model(){
+    private model() {
 
     }
 
-    public void setData(Contacts temp) {
-        temp.setCount(dataIndex);
-        data.add(temp);
-        dataIndex++;
+    public static model getInstance() {
+
+        return instance;
     }
 
-    public void setFavList(Contacts temp) {
-//        temp.setCount(favListIndex);
-//        favList.add(temp);
-//        favListIndex++;
-        temp.setCount(dataIndex);
-        favList.add(temp);
+    public void changeData(Contacts temp, int position) {
+        data.set(position, temp);
     }
 
-    public void changeData(Contacts temp , int position){
-        data.set(position,temp);
-    }
+    //----------------------------------------------------------------------------------------------
+    public List<Contacts> getContentFromDB(View view) {
 
-    public void changeFavList(Contacts temp , int position){
-        favList.set(position,temp);
-    }
+        //data = new LinkedList<>();
+        List<Contacts> tempList = new LinkedList<>();
+        int tempDataIndex = 0;
 
-    public List<Contacts> getAllContacts() {
+        Uri uri = ContactsContract.Contacts.CONTENT_URI;
+        Cursor contactsCursor = view.getContext().getContentResolver().query(uri, null, null, null, null);
+
+        if (contactsCursor.getCount() > 0) {
+            while (contactsCursor.moveToNext()) {
+                //temp contact
+                Contacts tempData = new Contacts();
+
+                //set full-name
+                tempData.setFullName(contactsCursor.getString(contactsCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)));
+
+                //check if favorite
+                String isFav = contactsCursor.getString(contactsCursor.getColumnIndex(ContactsContract.Contacts.STARRED));
+                if (isFav.equals("1")) {
+                    tempData.setFavorite(true);
+                }
+
+                String contactsId = contactsCursor.getString(contactsCursor.getColumnIndex(ContactsContract.Contacts._ID));
+                tempData.setDbPosition(contactsId);
+
+                //set Phone Number
+                Uri uriPhone = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+                String phoneSelection = ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " =?";
+                Cursor phoneCursor = view.getContext().getContentResolver().query(uriPhone, null, phoneSelection, new String[]{contactsId}, null);
+                if (phoneCursor.moveToNext()) {
+                    String number = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    tempData.setPhoneNumber(number);
+                }
+                phoneCursor.close();
+
+                //set Email address
+                Uri uriEmail = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
+                String emailSelection = ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?";
+                Cursor emailCursor = view.getContext().getContentResolver().query(uriEmail, null, emailSelection, new String[]{contactsId}, null);
+                if (emailCursor.moveToNext()) {
+                    String email = emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+                    tempData.setEmail(email);
+                }
+                emailCursor.close();
+
+                tempData.setListPosition(tempDataIndex);
+                tempList.add(tempData);
+                tempDataIndex++;
+            }
+        }
+        contactsCursor.close();
+        data = tempList;
+        dataIndex = tempDataIndex;
         return data;
-    }
 
-    public List<Contacts> getAllFavorites(){
-
-//        int tempIndex=0;
-//
-//        for(int i =0;i < data.size();i++){
-//            for(int j=0;j<favList.size();j++) {
-//                if (data.get(i).getFavorite() && data.get(i).getCount() != favList.get(j).getCount()) {
-//                    favList.add(tempIndex, data.get(i));
-//                    tempIndex++;
-//                }
-//            }
-//        }
-
-        return favList;
     }
 
     public Contacts getContactByCount(int count) {
         return data.get(count);
     }
 
-    public Contacts getFavContactByCount(int count) {
-        return favList.get(count);
-    }
+    public List<Contacts> getFavContentFromDB(View view) {
 
-    public void removeContact(int count){
-        data.remove(count);
-    }
+        Contacts tempContact = new Contacts();
+        List<Contacts> tempList = new LinkedList<>();
+        int tempFavListIndex = 0;
 
-    public void removeFavContact(int count){
-        favList.remove(count);
-    }
+        //if enter favorites before data fix empty list
+        if (data.size() == 0) {
+            getContentFromDB(view);
+        }
 
-    public void removeBothFavAndContact(Contacts contacts){
+        //run in data and find all favorites
+        for (int i = 0; i < data.size(); i++) {
 
-        for(int i=0;i<data.size();i++){
-
-            for (int j=0;j<favList.size();j++){
-
-                if(data.get(i).getCount() == favList.get(j).getCount()){
-
-                    data.remove(i);
-                    favList.remove(j);
-                    break;
-                }
+            if (data.get(i).getFavorite()) {
+                tempContact = data.get(i);
+                tempContact.setListPosition(tempFavListIndex);
+                tempList.add(tempContact);
+                tempFavListIndex++;
 
             }
 
         }
+        favList = tempList;
+        favListIndex = tempFavListIndex;
+        return favList;
+    }
 
+    public Contacts getFavContactByCount(int count) {
+        return favList.get(count);
+    }
+
+    public void saveContact(Contacts contact, Context context) {
+
+        Uri uri = context.getContentResolver().insert(ContactsContract.RawContacts.CONTENT_URI, new ContentValues());
+        long id = ContentUris.parseId(uri);
+
+        ContentValues name = new ContentValues();
+        name.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
+        name.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, contact.getFullName());
+        name.put(ContactsContract.Data.RAW_CONTACT_ID, id);
+        context.getContentResolver().insert(ContactsContract.Data.CONTENT_URI, name);
+
+        ContentValues number = new ContentValues();
+        number.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+        number.put(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPhoneNumber());
+        number.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_HOME);
+        number.put(ContactsContract.Data.RAW_CONTACT_ID, id);
+        context.getContentResolver().insert(ContactsContract.Data.CONTENT_URI, number);
+
+        ContentValues email = new ContentValues();
+        email.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE);
+        email.put(ContactsContract.CommonDataKinds.Email.ADDRESS, contact.getEmail());
+        email.put(ContactsContract.CommonDataKinds.Email.TYPE, ContactsContract.CommonDataKinds.Email.TYPE_HOME);
+        email.put(ContactsContract.Data.RAW_CONTACT_ID, id);
+        context.getContentResolver().insert(ContactsContract.Data.CONTENT_URI, email);
+
+        if (contact.getFavorite()) {
+            ContentValues isFav = new ContentValues();
+            isFav.put(ContactsContract.Contacts.STARRED, 1);
+            context.getContentResolver().update(ContactsContract.Contacts.CONTENT_URI, isFav, ContactsContract.Contacts._ID + "=" + id, null);
+        }
 
     }
 
+    public void updateContact(Contacts contact ,Context context) {
 
+        saveContact(contact,context);
+        removeContact(contact,context);
 
+    }
+
+    public void removeContact(Contacts contact ,Context context) {
+        String contactsId = contact.getDbPosition();
+        Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI,contactsId);
+        context.getContentResolver().delete(uri, null, null);
+    }
 
 }
 

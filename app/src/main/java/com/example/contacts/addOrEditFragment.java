@@ -39,24 +39,29 @@ public class addOrEditFragment extends Fragment {
         TextView titleText = root.findViewById(R.id.addOrEdit_fragment_title);
 
         String phoneNumber = addOrEditFragmentArgs.fromBundle(getArguments()).getPhoneNumberFromDialPad();
-        String fromFrag = addOrEditFragmentArgs.fromBundle(getArguments()).getFromLastFrag();
+        int fromFrag = addOrEditFragmentArgs.fromBundle(getArguments()).getFromLastFrag();
         int position = addOrEditFragmentArgs.fromBundle(getArguments()).getGetPositionFromInfo();
 
-        if(fromFrag == "DialPad"){
+        if(fromFrag == 0){
             titleText.setText("Add new contact: ");
             phoneNumberText.setText(phoneNumber);
 
-        }else if(fromFrag == "ContactsCreate"){
+        }else if(fromFrag == 1){
             titleText.setText("Add new contact: ");
         }else{
             titleText.setText("Edit contact");
-            contact = model.getInstance().getContactByCount(position);
+            if(fromFrag == 2){
+                contact = model.getInstance().getContactByCount(position);
+                if(contact.getFavorite()){
+                    addToFav.setChecked(true);
+                }
+            }else{
+                contact = model.getInstance().getFavContactByCount(position);
+                addToFav.setChecked(true);
+            }
             firstNameText.setText(contact.getFullName());
             phoneNumberText.setText(contact.getPhoneNumber());
             emailText.setText(contact.getEmail());
-            if(contact.getFavorite()){
-                addToFav.setChecked(true);
-            }
         }
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -65,17 +70,13 @@ public class addOrEditFragment extends Fragment {
                 contact.setPhoneNumber(phoneNumberText.getText().toString());
                 contact.setFullName(firstNameText.getText().toString());
                 contact.setEmail(emailText.getText().toString());
-                if(addToFav.isChecked()){
-                    contact.setFavorite(true);
-                }else {
-                    contact.setFavorite(false);
-                }
+                contact.setFavorite(addToFav.isChecked());
 
 
-                if(fromFrag == "DialPad" || fromFrag == "ContactsCreate") {
-                    model.getInstance().saveContact(contact,root.getContext());
+                if(fromFrag == 0 || fromFrag == 1) {
+                    model.getInstance().saveContact(contact,getContext().getContentResolver());
                 }else{
-                    model.getInstance().updateContact(contact,getContext());
+                    model.getInstance().updateContact(contact,getContext().getContentResolver());
                 }
                 Navigation.findNavController(root).navigate(R.id.action_addOrEditFragment_pop);
             }

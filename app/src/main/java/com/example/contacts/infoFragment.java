@@ -49,7 +49,7 @@ public class infoFragment extends Fragment {
 
      position = infoFragmentArgs.fromBundle(getArguments()).getRecivePosParam();
      Boolean isFav = infoFragmentArgs.fromBundle(getArguments()).getIsFav();
-     String fromFrag = infoFragmentArgs.fromBundle(getArguments()).getFromFrag();
+     int fromFrag = infoFragmentArgs.fromBundle(getArguments()).getFromFrag();
 
     if(isFav){
          contacts = model.getInstance().getFavContactByCount(position);
@@ -72,7 +72,7 @@ public class infoFragment extends Fragment {
      delBtn.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
-             model.getInstance().removeContact(contacts,getContext());
+             model.getInstance().removeContact(contacts,getContext().getContentResolver());
              Navigation.findNavController(root).navigate(R.id.isRemove);
          }
      });
@@ -109,21 +109,6 @@ public class infoFragment extends Fragment {
     });
 
      return root;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.info_save_btn ,menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        model.getInstance().changeData(contacts,position);
-        setHasOptionsMenu(false);
-
-        return super.onOptionsItemSelected(item);
     }
 
 }

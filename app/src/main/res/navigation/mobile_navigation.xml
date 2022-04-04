@@ -58,7 +58,7 @@
             app:popUpToInclusive="true" />
         <argument
             android:name="fromLastFrag"
-            app:argType="string" />
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/infoFragment"
@@ -76,7 +76,7 @@
             app:argType="boolean" />
         <argument
             android:name="fromFrag"
-            app:argType="string" />
+            app:argType="integer" />
         <action
             android:id="@+id/isRemove"
             app:popUpTo="@id/infoFragment"

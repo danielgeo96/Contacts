@@ -44,6 +44,7 @@ public class ContactsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        //Show the add button in the menu bar.
         setHasOptionsMenu(true);
         contactsViewModel =
                 new ViewModelProvider(this).get(ContactsViewModel.class);
@@ -51,33 +52,32 @@ public class ContactsFragment extends Fragment {
         binding = FragmentContactsBinding.inflate(inflater, container, false);
         root = binding.getRoot();
 
-        //Make list
+        //Make list.
         list = root.findViewById(R.id.fragment_contacts_recyclerView);
         list.hasFixedSize();
 
-        //do something
+        //Set list layout manager.
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         list.setLayoutManager(layoutManager);
 
-        //getting data from the model
-        //List<Contacts> data = model.instance.getContentFromDB(root);
-        List<Contacts> data = model.getInstance().getContentFromDB(root);
+        //Getting data from the model.
+        List<Contacts> data = model.getInstance().getContentFromDB(getContext().getContentResolver());
 
-        //set adapter
+        //Set adapter.
         contactsAdapter adapter = new contactsAdapter(getLayoutInflater());
         adapter.data = data;
         list.setAdapter(adapter);
 
-        //Create divider between lines
+        //Create divider between lines.
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(list.getContext(),
                 layoutManager.getOrientation());
         list.addItemDecoration(dividerItemDecoration);
 
+        //When click on row move to info fragment.
         adapter.setOnClickListener(new contactsAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
-                Log.d("Tag","row was clicked" + position);
-                ContactsFragmentDirections.ContactsToInfo action = ContactsFragmentDirections.contactsToInfo(position,false,"Contacts");
+                ContactsFragmentDirections.ContactsToInfo action = ContactsFragmentDirections.contactsToInfo(position,false,2);
                 Navigation.findNavController(root).navigate(action);
                 
             }
@@ -86,15 +86,17 @@ public class ContactsFragment extends Fragment {
         return root;
     }
 
+    //Create menu bar.
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.dialpad_menu ,menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    //When press on menu bar add button move to add or edit fragment.
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        ContactsFragmentDirections.ContactsToAddOrEdit action = ContactsFragmentDirections.contactsToAddOrEdit("",-1,"ContactsCreate");
+        ContactsFragmentDirections.ContactsToAddOrEdit action = ContactsFragmentDirections.contactsToAddOrEdit("",-1,1);
         Navigation.findNavController(root).navigate(action);
 
         return super.onOptionsItemSelected(item);

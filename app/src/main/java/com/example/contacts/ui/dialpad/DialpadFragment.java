@@ -1,34 +1,26 @@
 package com.example.contacts.ui.dialpad;
 
-import android.Manifest;
-import android.content.Context;
+
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.example.contacts.MainActivity;
 import com.example.contacts.R;
 import com.example.contacts.databinding.FragmentDialpadBinding;
-import com.example.contacts.ui.contacts.ContactsFragmentDirections;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class DialpadFragment extends Fragment implements View.OnClickListener {
@@ -38,6 +30,7 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
     TextView titleNum;
     String finalText;
     View root;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         dialpadViewModel =
@@ -75,6 +68,7 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
         ImageButton deleteBtn = root.findViewById(R.id.fragment_dialpad_deleteBtn);
         FloatingActionButton callBtn = root.findViewById(R.id.fragment_dialpad_callBtn);
 
+        //When press delete button remove the last char on the String.
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,6 +83,7 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
             }
         });
 
+        //When press call button send intent to the phone caller and dial to the number in the text view.
         callBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,13 +96,14 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
         return root;
     }
 
-    //when click on row do this function
+    //When click on one of the number do this.
     @Override
     public void onClick(View v) {
+        //Add add button in the menu bar.
         setHasOptionsMenu(true);
-        String selected = (String)v.getTag();
 
-        Log.d("TAG", "the num is " +selected);
+        //Set and deploy the new String.
+        String selected = (String)v.getTag();
         titleNum.append(selected);
         finalText = titleNum.getText().toString();
 
@@ -115,19 +111,22 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        //Disable add button at the menu bar.
         setHasOptionsMenu(false);
         super.onCreate(savedInstanceState);
     }
 
+    //Create menu bar
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.dialpad_menu ,menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    //When press the add button at the menu bar Move to AddOrEdit fragment.
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        DialpadFragmentDirections.DialpadToAddOrEdit action = DialpadFragmentDirections.dialpadToAddOrEdit(finalText,-1,"DialPad");
+        DialpadFragmentDirections.DialpadToAddOrEdit action = DialpadFragmentDirections.dialpadToAddOrEdit(finalText,-1,0);
         Navigation.findNavController(root).navigate(action);
         return super.onOptionsItemSelected(item);
     }

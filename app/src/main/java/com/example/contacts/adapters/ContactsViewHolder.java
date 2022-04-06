@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.contacts.R;
 import com.example.contacts.model.Contacts;
 
-public class contactsViewHolder extends RecyclerView.ViewHolder {
-    public contactsAdapter.OnItemClickListener listener;
+public class ContactsViewHolder extends RecyclerView.ViewHolder {
+    public ContactsAdapter.OnItemClickListener listener;
     TextView contactsFullName;
     ImageView contactsImage;
     int position;
 
-    public contactsViewHolder(@NonNull View itemView) {
+    public ContactsViewHolder(@NonNull View itemView) {
         super(itemView);
         contactsFullName = itemView.findViewById(R.id.row_list_textView);
         contactsImage = itemView.findViewById(R.id.row_list_imageView);

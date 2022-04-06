@@ -1,34 +1,26 @@
 package com.example.contacts.model;
 
-import android.app.DownloadManager;
-import android.content.ContentProviderOperation;
-import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.util.Log;
-import android.content.Context;
-import android.view.View;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class model {
+public class Model {
     int dataIndex, favListIndex = 0;
     List<Contacts> data, favList = new LinkedList<>();
 
-    private final static model instance = new model();
+    private final static Model instance = new Model();
 
-    private model() {
+    private Model() {
 
     }
 
-    public static model getInstance() {
+    public static Model getInstance() {
 
         return instance;
     }

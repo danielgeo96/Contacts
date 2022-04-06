@@ -1,7 +1,6 @@
 package com.example.contacts.ui.favorites;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,24 +14,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.contacts.R;
-import com.example.contacts.adapters.contactsAdapter;
+import com.example.contacts.adapters.ContactsAdapter;
 import com.example.contacts.databinding.FragmentFavoritesBinding;
 import com.example.contacts.model.Contacts;
-import com.example.contacts.model.model;
-import com.example.contacts.ui.contacts.ContactsFragmentDirections;
+import com.example.contacts.model.Model;
 
 import java.util.List;
 
 public class FavoritesFragment extends Fragment {
 
-    private favoritesViewModel favoritesViewModel;
+    private FavoritesViewModel favoritesViewModel;
     private FragmentFavoritesBinding binding;
     RecyclerView list;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         favoritesViewModel =
-                new ViewModelProvider(this).get(favoritesViewModel.class);
+                new ViewModelProvider(this).get(FavoritesViewModel.class);
 
         binding = FragmentFavoritesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -46,10 +44,10 @@ public class FavoritesFragment extends Fragment {
         list.setLayoutManager(layoutManager);
 
         //Getting data from the model.
-        List<Contacts> data = model.getInstance().getFavContentFromDB(getContext().getContentResolver());
+        List<Contacts> data = Model.getInstance().getFavContentFromDB(getContext().getContentResolver());
 
         //Set adapter.
-        contactsAdapter adapter = new contactsAdapter(getLayoutInflater());
+        ContactsAdapter adapter = new ContactsAdapter(getLayoutInflater());
         adapter.data = data;
         list.setAdapter(adapter);
 
@@ -59,7 +57,7 @@ public class FavoritesFragment extends Fragment {
         list.addItemDecoration(dividerItemDecoration);
 
         //When click on row move to info fragment.
-        adapter.setOnClickListener(new contactsAdapter.OnItemClickListener() {
+        adapter.setOnClickListener(new ContactsAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
 

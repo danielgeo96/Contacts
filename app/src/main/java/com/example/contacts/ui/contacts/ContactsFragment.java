@@ -1,12 +1,6 @@
 package com.example.contacts.ui.contacts;
 
-import android.content.ContentResolver;
-import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -24,15 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.contacts.R;
-import com.example.contacts.adapters.contactsAdapter;
+import com.example.contacts.adapters.ContactsAdapter;
 import com.example.contacts.databinding.FragmentContactsBinding;
 import com.example.contacts.model.Contacts;
-import com.example.contacts.model.model;
-import com.example.contacts.ui.dialpad.DialpadFragmentDirections;
+import com.example.contacts.model.Model;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
 
 
 public class ContactsFragment extends Fragment {
@@ -61,10 +51,10 @@ public class ContactsFragment extends Fragment {
         list.setLayoutManager(layoutManager);
 
         //Getting data from the model.
-        List<Contacts> data = model.getInstance().getContentFromDB(getContext().getContentResolver());
+        List<Contacts> data = Model.getInstance().getContentFromDB(getContext().getContentResolver());
 
         //Set adapter.
-        contactsAdapter adapter = new contactsAdapter(getLayoutInflater());
+        ContactsAdapter adapter = new ContactsAdapter(getLayoutInflater());
         adapter.data = data;
         list.setAdapter(adapter);
 
@@ -74,7 +64,7 @@ public class ContactsFragment extends Fragment {
         list.addItemDecoration(dividerItemDecoration);
 
         //When click on row move to info fragment.
-        adapter.setOnClickListener(new contactsAdapter.OnItemClickListener() {
+        adapter.setOnClickListener(new ContactsAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
                 ContactsFragmentDirections.ContactsToInfo action = ContactsFragmentDirections.contactsToInfo(position,false,2);

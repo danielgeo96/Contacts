@@ -43,7 +43,7 @@
     </fragment>
     <fragment
         android:id="@+id/addOrEditFragment"
-        android:name="com.example.contacts.addOrEditFragment"
+        android:name="com.example.contacts.AddOrEditFragment"
         android:label="fragment_add_or_edit"
         tools:layout="@layout/fragment_add_or_edit" >
         <argument
@@ -63,7 +63,7 @@
     </fragment>
     <fragment
         android:id="@+id/infoFragment"
-        android:name="com.example.contacts.infoFragment"
+        android:name="com.example.contacts.InfoFragment"
         android:label="Contacs Info"
         tools:layout="@layout/fragment_info">
         <action

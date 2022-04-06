@@ -1,11 +1,8 @@
 package com.example.contacts.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,14 +11,13 @@ import com.example.contacts.R;
 import com.example.contacts.model.Contacts;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
-public class contactsAdapter extends RecyclerView.Adapter<contactsViewHolder>{
+public class ContactsAdapter extends RecyclerView.Adapter<ContactsViewHolder>{
 
     public List<Contacts> data;
     LayoutInflater inflater;
 
-    public contactsAdapter(LayoutInflater inflater) {
+    public ContactsAdapter(LayoutInflater inflater) {
         this.inflater = inflater;
     }
 
@@ -37,15 +33,15 @@ public class contactsAdapter extends RecyclerView.Adapter<contactsViewHolder>{
 
     @NonNull
     @Override
-    public contactsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ContactsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.row_list, null);
-        contactsViewHolder holder = new contactsViewHolder(view);
+        ContactsViewHolder holder = new ContactsViewHolder(view);
             holder.listener = listener;
             return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull contactsViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ContactsViewHolder holder, int position) {
             Contacts contact = data.get(position);
             holder.bindData(contact, position);
     }

@@ -33,6 +33,7 @@ public class model {
         return instance;
     }
 
+    //Get contacts list from db.
     public List<Contacts> getContentFromDB(ContentResolver contentResolver) {
 
         List<Contacts> tempList = new LinkedList<>();
@@ -91,10 +92,12 @@ public class model {
 
     }
 
+    //Get contact from list by position.
     public Contacts getContactByCount(int count) {
         return data.get(count);
     }
 
+    //Get favorite contacts list from db.
     public List<Contacts> getFavContentFromDB(ContentResolver contentResolver) {
 
         Contacts tempContact;
@@ -123,35 +126,26 @@ public class model {
         return favList;
     }
 
+    //Get favorite contact from favorite list by position.
     public Contacts getFavContactByCount(int count) {
         return favList.get(count);
     }
 
+    //Save contact to db.
     public void saveContact(Contacts contact, ContentResolver contentResolver) {
 
         Uri uri = contentResolver.insert(ContactsContract.RawContacts.CONTENT_URI, new ContentValues());
         long id = ContentUris.parseId(uri);
         ContentValues contentValues;
 
-        contentValues = new ContentValues();
-        contentValues.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
-        contentValues.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, contact.getFullName());
-        contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, id);
-        contentResolver.insert(ContactsContract.Data.CONTENT_URI, contentValues);
+        //Edit name.
+        editName(id,contact.getFullName(),contentResolver,ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE,ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME);
 
-        contentValues = new ContentValues();
-        contentValues.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
-        contentValues.put(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPhoneNumber());
-        contentValues.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_HOME);
-        contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, id);
-        contentResolver.insert(ContactsContract.Data.CONTENT_URI, contentValues);
+        //Edit phone number.
+        editEmailOrPhone(id,contact.getPhoneNumber(),contentResolver,ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,ContactsContract.CommonDataKinds.Phone.NUMBER,ContactsContract.CommonDataKinds.Phone.TYPE,ContactsContract.CommonDataKinds.Phone.TYPE_HOME);
 
-        contentValues = new ContentValues();
-        contentValues.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE);
-        contentValues.put(ContactsContract.CommonDataKinds.Email.ADDRESS, contact.getEmail());
-        contentValues.put(ContactsContract.CommonDataKinds.Email.TYPE, ContactsContract.CommonDataKinds.Email.TYPE_HOME);
-        contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, id);
-        contentResolver.insert(ContactsContract.Data.CONTENT_URI, contentValues);
+        //Edit email.
+        editEmailOrPhone(id,contact.getPhoneNumber(),contentResolver,ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE,ContactsContract.CommonDataKinds.Email.ADDRESS,ContactsContract.CommonDataKinds.Email.TYPE,ContactsContract.CommonDataKinds.Email.TYPE_HOME);
 
         if (contact.getFavorite()) {
             ContentValues isFav = new ContentValues();
@@ -161,18 +155,36 @@ public class model {
 
     }
 
+    //Update contacts using save and delete.
     public void updateContact(Contacts contact, ContentResolver contentResolver) {
-
         saveContact(contact, contentResolver);
         removeContact(contact, contentResolver);
-
     }
 
+    //Remove contacts.
     public void removeContact(Contacts contact, ContentResolver contentResolver) {
         String contactsId = contact.getDbPosition();
         Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contactsId);
         contentResolver.delete(uri, null, null);
     }
 
+    //Edit email or phone number.
+    private void editEmailOrPhone(long id, String data , ContentResolver contentResolver, String contentItemType, String dataUri, String typeUri, int typeDataUri){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ContactsContract.Data.MIMETYPE, String.valueOf(contentItemType));
+        contentValues.put(String.valueOf(dataUri), data);
+        contentValues.put(String.valueOf(typeUri), String.valueOf(typeDataUri));
+        contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, id);
+        contentResolver.insert(ContactsContract.Data.CONTENT_URI, contentValues);
+    }
+
+    //Edit name.
+    private void editName(long id, String data , ContentResolver contentResolver, String contentItemType, String dataUri){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ContactsContract.Data.MIMETYPE, String.valueOf(contentItemType));
+        contentValues.put(String.valueOf(dataUri), data);
+        contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, id);
+        contentResolver.insert(ContactsContract.Data.CONTENT_URI, contentValues);
+    }
 }
 

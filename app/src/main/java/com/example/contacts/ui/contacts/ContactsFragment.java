@@ -96,7 +96,7 @@ public class ContactsFragment extends Fragment {
     //When press on menu bar add button move to add or edit fragment.
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        ContactsFragmentDirections.ContactsToAddOrEdit action = ContactsFragmentDirections.contactsToAddOrEdit("",-1,1);
+        ContactsFragmentDirections.ContactsToAddOrEdit action = ContactsFragmentDirections.contactsToAddOrEdit(null,-1,1);
         Navigation.findNavController(root).navigate(action);
 
         return super.onOptionsItemSelected(item);

@@ -1,5 +1,6 @@
 package com.example.contacts.model;
 
+import android.app.DownloadManager;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
@@ -18,11 +19,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class model {
-    int dataIndex = 0;
-    int favListIndex = 0;
-
-    List<Contacts> data = new LinkedList<>();
-    List<Contacts> favList = new LinkedList<>();
+    int dataIndex, favListIndex = 0;
+    List<Contacts> data, favList = new LinkedList<>();
 
     private final static model instance = new model();
 
@@ -35,23 +33,18 @@ public class model {
         return instance;
     }
 
-    public void changeData(Contacts temp, int position) {
-        data.set(position, temp);
-    }
+    //Get contacts list from db.
+    public List<Contacts> getContentFromDB(ContentResolver contentResolver) {
 
-    //----------------------------------------------------------------------------------------------
-    public List<Contacts> getContentFromDB(View view) {
-
-        //data = new LinkedList<>();
         List<Contacts> tempList = new LinkedList<>();
         int tempDataIndex = 0;
 
         Uri uri = ContactsContract.Contacts.CONTENT_URI;
-        Cursor contactsCursor = view.getContext().getContentResolver().query(uri, null, null, null, null);
+        Cursor contactsCursor = contentResolver.query(uri, null, null, null, null);
 
         if (contactsCursor.getCount() > 0) {
             while (contactsCursor.moveToNext()) {
-                //temp contact
+
                 Contacts tempData = new Contacts();
 
                 //set full-name
@@ -63,13 +56,14 @@ public class model {
                     tempData.setFavorite(true);
                 }
 
+                //Get contact id from DB
                 String contactsId = contactsCursor.getString(contactsCursor.getColumnIndex(ContactsContract.Contacts._ID));
                 tempData.setDbPosition(contactsId);
 
-                //set Phone Number
+                //Set Phone Number
                 Uri uriPhone = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
                 String phoneSelection = ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " =?";
-                Cursor phoneCursor = view.getContext().getContentResolver().query(uriPhone, null, phoneSelection, new String[]{contactsId}, null);
+                Cursor phoneCursor = contentResolver.query(uriPhone, null, phoneSelection, new String[]{contactsId}, null);
                 if (phoneCursor.moveToNext()) {
                     String number = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                     tempData.setPhoneNumber(number);
@@ -79,7 +73,7 @@ public class model {
                 //set Email address
                 Uri uriEmail = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
                 String emailSelection = ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?";
-                Cursor emailCursor = view.getContext().getContentResolver().query(uriEmail, null, emailSelection, new String[]{contactsId}, null);
+                Cursor emailCursor = contentResolver.query(uriEmail, null, emailSelection, new String[]{contactsId}, null);
                 if (emailCursor.moveToNext()) {
                     String email = emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
                     tempData.setEmail(email);
@@ -98,22 +92,25 @@ public class model {
 
     }
 
+    //Get contact from list by position.
     public Contacts getContactByCount(int count) {
         return data.get(count);
     }
 
-    public List<Contacts> getFavContentFromDB(View view) {
+    //Get favorite contacts list from db.
+    public List<Contacts> getFavContentFromDB(ContentResolver contentResolver) {
 
-        Contacts tempContact = new Contacts();
+        Contacts tempContact;
         List<Contacts> tempList = new LinkedList<>();
         int tempFavListIndex = 0;
 
         //if enter favorites before data fix empty list
-        if (data.size() == 0) {
-            getContentFromDB(view);
+
+        if (data == null) {
+            getContentFromDB(contentResolver);
         }
 
-        //run in data and find all favorites
+        //run in data list and find all favorites
         for (int i = 0; i < data.size(); i++) {
 
             if (data.get(i).getFavorite()) {
@@ -121,64 +118,81 @@ public class model {
                 tempContact.setListPosition(tempFavListIndex);
                 tempList.add(tempContact);
                 tempFavListIndex++;
-
             }
-
         }
+
         favList = tempList;
         favListIndex = tempFavListIndex;
         return favList;
     }
 
+    //Get favorite contact from favorite list by position.
     public Contacts getFavContactByCount(int count) {
         return favList.get(count);
     }
 
-    public void saveContact(Contacts contact, Context context) {
+    //Save contact to db.
+    public void saveContact(Contacts contact, ContentResolver contentResolver) {
 
-        Uri uri = context.getContentResolver().insert(ContactsContract.RawContacts.CONTENT_URI, new ContentValues());
+        Uri uri = contentResolver.insert(ContactsContract.RawContacts.CONTENT_URI, new ContentValues());
         long id = ContentUris.parseId(uri);
+        ContentValues contentValues;
 
-        ContentValues name = new ContentValues();
-        name.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
-        name.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, contact.getFullName());
-        name.put(ContactsContract.Data.RAW_CONTACT_ID, id);
-        context.getContentResolver().insert(ContactsContract.Data.CONTENT_URI, name);
+        //Edit name.
+        editName(id,contact.getFullName(),contentResolver,ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE,ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME);
 
-        ContentValues number = new ContentValues();
-        number.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
-        number.put(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPhoneNumber());
-        number.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_HOME);
-        number.put(ContactsContract.Data.RAW_CONTACT_ID, id);
-        context.getContentResolver().insert(ContactsContract.Data.CONTENT_URI, number);
+        //Edit phone number.
+        editEmailOrPhone(id,contact.getPhoneNumber(),contentResolver,ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,ContactsContract.CommonDataKinds.Phone.NUMBER,ContactsContract.CommonDataKinds.Phone.TYPE,ContactsContract.CommonDataKinds.Phone.TYPE_HOME);
 
-        ContentValues email = new ContentValues();
-        email.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE);
-        email.put(ContactsContract.CommonDataKinds.Email.ADDRESS, contact.getEmail());
-        email.put(ContactsContract.CommonDataKinds.Email.TYPE, ContactsContract.CommonDataKinds.Email.TYPE_HOME);
-        email.put(ContactsContract.Data.RAW_CONTACT_ID, id);
-        context.getContentResolver().insert(ContactsContract.Data.CONTENT_URI, email);
+        //Edit email.
+        editEmailOrPhone(id,contact.getPhoneNumber(),contentResolver,ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE,ContactsContract.CommonDataKinds.Email.ADDRESS,ContactsContract.CommonDataKinds.Email.TYPE,ContactsContract.CommonDataKinds.Email.TYPE_HOME);
 
+        //Check if contact is favorite, if so change in db.
         if (contact.getFavorite()) {
-            ContentValues isFav = new ContentValues();
-            isFav.put(ContactsContract.Contacts.STARRED, 1);
-            context.getContentResolver().update(ContactsContract.Contacts.CONTENT_URI, isFav, ContactsContract.Contacts._ID + "=" + id, null);
+            editIsFav(id,true,contentResolver);
+        }else {
+            editIsFav(id,false,contentResolver);
         }
 
     }
 
-    public void updateContact(Contacts contact ,Context context) {
-
-        saveContact(contact,context);
-        removeContact(contact,context);
-
+    //Update contacts using save and delete.
+    public void updateContact(Contacts contact, ContentResolver contentResolver) {
+        saveContact(contact, contentResolver);
+        removeContact(contact, contentResolver);
     }
 
-    public void removeContact(Contacts contact ,Context context) {
+    //Remove contacts.
+    public void removeContact(Contacts contact, ContentResolver contentResolver) {
         String contactsId = contact.getDbPosition();
-        Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI,contactsId);
-        context.getContentResolver().delete(uri, null, null);
+        Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contactsId);
+        contentResolver.delete(uri, null, null);
     }
 
+    //Edit email or phone number.
+    private void editEmailOrPhone(long id, String data , ContentResolver contentResolver, String contentItemType, String dataUri, String typeUri, int typeDataUri){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ContactsContract.Data.MIMETYPE, String.valueOf(contentItemType));
+        contentValues.put(String.valueOf(dataUri), data);
+        contentValues.put(String.valueOf(typeUri), String.valueOf(typeDataUri));
+        contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, id);
+        contentResolver.insert(ContactsContract.Data.CONTENT_URI, contentValues);
+    }
+
+    //Edit name.
+    private void editName(long id, String data , ContentResolver contentResolver, String contentItemType, String dataUri){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ContactsContract.Data.MIMETYPE, String.valueOf(contentItemType));
+        contentValues.put(String.valueOf(dataUri), data);
+        contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, id);
+        contentResolver.insert(ContactsContract.Data.CONTENT_URI, contentValues);
+    }
+
+    //Edit isFav.
+    private void editIsFav(long id,Boolean isFav,ContentResolver contentResolver){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ContactsContract.Contacts.STARRED, isFav);
+        contentResolver.update(ContactsContract.Contacts.CONTENT_URI, contentValues, ContactsContract.Contacts._ID + "=" + id, null);
+    }
 }
 

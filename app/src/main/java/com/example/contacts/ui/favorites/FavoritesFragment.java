@@ -28,7 +28,6 @@ public class FavoritesFragment extends Fragment {
     private favoritesViewModel favoritesViewModel;
     private FragmentFavoritesBinding binding;
     RecyclerView list;
-    View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -38,36 +37,34 @@ public class FavoritesFragment extends Fragment {
         binding = FragmentFavoritesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        //Make list
+        //Make list.
         list = root.findViewById(R.id.fragment_favorite_recycler_view);
         list.hasFixedSize();
 
-        //do something
+        //Set list layout manager.
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         list.setLayoutManager(layoutManager);
 
-        //getting data from the model
-        List<Contacts> data = model.getInstance().getFavContentFromDB(root);
+        //Getting data from the model.
+        List<Contacts> data = model.getInstance().getFavContentFromDB(getContext().getContentResolver());
 
-        //set adapter
+        //Set adapter.
         contactsAdapter adapter = new contactsAdapter(getLayoutInflater());
         adapter.data = data;
         list.setAdapter(adapter);
 
-        //Create divider between lines
+        //Create divider between lines.
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(list.getContext(),
                 layoutManager.getOrientation());
         list.addItemDecoration(dividerItemDecoration);
 
+        //When click on row move to info fragment.
         adapter.setOnClickListener(new contactsAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
 
-                Log.d("Tag","row was clicked" + position);
-                FavoritesFragmentDirections.ActionNavigationFavoritesToInfoFragment action = FavoritesFragmentDirections.actionNavigationFavoritesToInfoFragment(position,true,"Favorites");
+                FavoritesFragmentDirections.ActionNavigationFavoritesToInfoFragment action = FavoritesFragmentDirections.actionNavigationFavoritesToInfoFragment(position,true,3);
                 Navigation.findNavController(root).navigate(action);
-
-
             }
         });
 

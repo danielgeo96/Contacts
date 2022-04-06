@@ -1,13 +1,10 @@
 package com.example.contacts;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +14,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.contacts.model.Contacts;
-import com.example.contacts.model.model;
-import com.example.contacts.ui.contacts.ContactsFragmentDirections;
+import com.example.contacts.model.Model;
 
 
-public class addOrEditFragment extends Fragment {
+public class AddOrEditFragment extends Fragment {
 
     Contacts contact = new Contacts();
     TextView titleText;
@@ -42,9 +38,9 @@ public class addOrEditFragment extends Fragment {
         emailText = root.findViewById(R.id.add_or_edit_emailText);
         titleText = root.findViewById(R.id.addOrEdit_fragment_title);
 
-        String phoneNumber = addOrEditFragmentArgs.fromBundle(getArguments()).getPhoneNumberFromDialPad();
-        int fromFrag = addOrEditFragmentArgs.fromBundle(getArguments()).getFromLastFrag();
-        int position = addOrEditFragmentArgs.fromBundle(getArguments()).getGetPositionFromInfo();
+        String phoneNumber = AddOrEditFragmentArgs.fromBundle(getArguments()).getPhoneNumberFromDialPad();
+        int fromFrag = AddOrEditFragmentArgs.fromBundle(getArguments()).getFromLastFrag();
+        int position = AddOrEditFragmentArgs.fromBundle(getArguments()).getGetPositionFromInfo();
 
         //Change the fragment to the relevant style.
         openFragment(phoneNumber, fromFrag, position);
@@ -57,9 +53,9 @@ public class addOrEditFragment extends Fragment {
                         toString(), emailText.getText().toString(), addToFav.isChecked());
 
                 if (fromFrag == 0 || fromFrag == 1) {
-                    model.getInstance().saveContact(contact, getContext().getContentResolver());
+                    Model.getInstance().saveContact(contact, getContext().getContentResolver());
                 } else {
-                    model.getInstance().updateContact(contact, getContext().getContentResolver());
+                    Model.getInstance().updateContact(contact, getContext().getContentResolver());
                 }
                 Navigation.findNavController(root).navigate(R.id.action_addOrEditFragment_pop);
             }
@@ -98,12 +94,12 @@ public class addOrEditFragment extends Fragment {
                 titleText.setText("Edit contact");
                 //Check if open from contacts frag or favorites frag.
                 if (fromFrag == 2) {
-                    contact = model.getInstance().getContactByCount(position);
+                    contact = Model.getInstance().getContactByCount(position);
                     if (contact.getFavorite()) {
                         addToFav.setChecked(true);
                     }
                 } else {
-                    contact = model.getInstance().getFavContactByCount(position);
+                    contact = Model.getInstance().getFavContactByCount(position);
                     addToFav.setChecked(true);
                 }
                 //Set textview.

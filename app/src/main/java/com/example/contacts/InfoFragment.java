@@ -4,30 +4,21 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.contacts.model.Contacts;
-import com.example.contacts.model.model;
-import com.example.contacts.ui.contacts.ContactsFragmentDirections;
-
-import org.w3c.dom.Text;
+import com.example.contacts.model.Model;
 
 
-public class infoFragment extends Fragment {
+public class InfoFragment extends Fragment {
 
     int position;
     Contacts contacts;
@@ -48,14 +39,14 @@ public class infoFragment extends Fragment {
         Button emailBtn = root.findViewById(R.id.fragment_info_emailBtn);
         Button msgBtn = root.findViewById(R.id.fragment_info_msgBtn);
 
-        position = infoFragmentArgs.fromBundle(getArguments()).getRecivePosParam();
-        Boolean isFav = infoFragmentArgs.fromBundle(getArguments()).getIsFav();
-        int fromFrag = infoFragmentArgs.fromBundle(getArguments()).getFromFrag();
+        position = InfoFragmentArgs.fromBundle(getArguments()).getRecivePosParam();
+        Boolean isFav = InfoFragmentArgs.fromBundle(getArguments()).getIsFav();
+        int fromFrag = InfoFragmentArgs.fromBundle(getArguments()).getFromFrag();
 
         if (isFav) {
-            contacts = model.getInstance().getFavContactByCount(position);
+            contacts = Model.getInstance().getFavContactByCount(position);
         } else {
-            contacts = model.getInstance().getContactByCount(position);
+            contacts = Model.getInstance().getContactByCount(position);
         }
 
         fullNameTextView.setText(contacts.getFullName());
@@ -66,7 +57,7 @@ public class infoFragment extends Fragment {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                infoFragmentDirections.ActionInfoFragmentToAddOrEditFragment action = infoFragmentDirections.actionInfoFragmentToAddOrEditFragment("", position, fromFrag);
+                InfoFragmentDirections.ActionInfoFragmentToAddOrEditFragment action = InfoFragmentDirections.actionInfoFragmentToAddOrEditFragment("", position, fromFrag);
                 Navigation.findNavController(root).navigate(action);
             }
         });
@@ -75,7 +66,7 @@ public class infoFragment extends Fragment {
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.getInstance().removeContact(contacts, getContext().getContentResolver());
+                Model.getInstance().removeContact(contacts, getContext().getContentResolver());
                 Navigation.findNavController(root).navigate(R.id.isRemove);
             }
         });

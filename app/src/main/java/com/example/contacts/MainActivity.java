@@ -1,12 +1,10 @@
 package com.example.contacts;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.example.contacts.adapters.contactsAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -17,7 +15,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.contacts.databinding.ActivityMainBinding;
 

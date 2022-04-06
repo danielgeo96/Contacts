@@ -147,10 +147,11 @@ public class model {
         //Edit email.
         editEmailOrPhone(id,contact.getPhoneNumber(),contentResolver,ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE,ContactsContract.CommonDataKinds.Email.ADDRESS,ContactsContract.CommonDataKinds.Email.TYPE,ContactsContract.CommonDataKinds.Email.TYPE_HOME);
 
+        //Check if contact is favorite, if so change in db.
         if (contact.getFavorite()) {
-            ContentValues isFav = new ContentValues();
-            isFav.put(ContactsContract.Contacts.STARRED, 1);
-            contentResolver.update(ContactsContract.Contacts.CONTENT_URI, isFav, ContactsContract.Contacts._ID + "=" + id, null);
+            editIsFav(id,true,contentResolver);
+        }else {
+            editIsFav(id,false,contentResolver);
         }
 
     }
@@ -185,6 +186,13 @@ public class model {
         contentValues.put(String.valueOf(dataUri), data);
         contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, id);
         contentResolver.insert(ContactsContract.Data.CONTENT_URI, contentValues);
+    }
+
+    //Edit isFav.
+    private void editIsFav(long id,Boolean isFav,ContentResolver contentResolver){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ContactsContract.Contacts.STARRED, isFav);
+        contentResolver.update(ContactsContract.Contacts.CONTENT_URI, contentValues, ContactsContract.Contacts._ID + "=" + id, null);
     }
 }
 

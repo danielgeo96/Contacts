@@ -36,15 +36,13 @@ public class ContactsFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         //Show the add button in the menu bar.
         setHasOptionsMenu(true);
-        contactsViewModel =
-                new ViewModelProvider(this).get(ContactsViewModel.class);
+        contactsViewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
 
         binding = FragmentContactsBinding.inflate(inflater, container, false);
         root = binding.getRoot();
 
         //Make list.
         list = root.findViewById(R.id.fragment_contacts_recyclerView);
-        list.hasFixedSize();
 
         //Set list layout manager.
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());

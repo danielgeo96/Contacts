@@ -28,18 +28,18 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
     private DialpadViewModel dialpadViewModel;
     private FragmentDialpadBinding binding;
     TextView titleNum;
-    String finalText;
+    String finalText = "";
     View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        dialpadViewModel =
-                new ViewModelProvider(this).get(DialpadViewModel.class);
+        dialpadViewModel = new ViewModelProvider(this).get(DialpadViewModel.class);
 
         binding = FragmentDialpadBinding.inflate(inflater, container, false);
         root = binding.getRoot();
 
         titleNum = root.findViewById(R.id.fragment_dialpad_titleTextView);
+        titleNum.setText(finalText);
         FloatingActionButton oneBtn = root.findViewById(R.id.fragment_dialpad_oneBtn);
         oneBtn.setOnClickListener(this);
         FloatingActionButton twoBtn = root.findViewById(R.id.fragment_dialpad_twoBtn);
@@ -72,14 +72,14 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
+                if(!finalText.isEmpty()) {
                     finalText = finalText.substring(0, finalText.length() - 1);
                     titleNum.setText(finalText);
-                }finally {
-                    setHasOptionsMenu(false);
-                    return;
-                }
 
+                    if (finalText.isEmpty()) {
+                        setHasOptionsMenu(false);
+                    }
+                }
             }
         });
 
@@ -88,7 +88,8 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:"+finalText));//change the number
+
+                callIntent.setData(Uri.parse("tel:" + finalText));//change the number
                 startActivity(callIntent);
             }
         });
@@ -103,7 +104,7 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
         setHasOptionsMenu(true);
 
         //Set and deploy the new String.
-        String selected = (String)v.getTag();
+        String selected = (String) v.getTag();
         titleNum.append(selected);
         finalText = titleNum.getText().toString();
 
@@ -119,14 +120,14 @@ public class DialpadFragment extends Fragment implements View.OnClickListener {
     //Create menu bar
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.dialpad_menu ,menu);
+        inflater.inflate(R.menu.dialpad_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     //When press the add button at the menu bar Move to AddOrEdit fragment.
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        DialpadFragmentDirections.DialpadToAddOrEdit action = DialpadFragmentDirections.dialpadToAddOrEdit(finalText,-1,0);
+        DialpadFragmentDirections.DialpadToAddOrEdit action = DialpadFragmentDirections.dialpadToAddOrEdit(finalText, -1, 0);
         Navigation.findNavController(root).navigate(action);
         return super.onOptionsItemSelected(item);
     }

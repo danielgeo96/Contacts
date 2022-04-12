@@ -21,13 +21,7 @@ public class ContactsViewHolder extends RecyclerView.ViewHolder {
         contactsFullName = itemView.findViewById(R.id.row_list_textView);
         contactsImage = itemView.findViewById(R.id.row_list_imageView);
 
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.OnItemClick(position);
-            }
-        });
-
+        itemView.setOnClickListener(v -> listener.OnItemClick(position));
     }
 
     public void bindData(Contacts contact, int position) {

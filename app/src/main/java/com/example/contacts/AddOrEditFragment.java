@@ -19,10 +19,13 @@ import com.example.contacts.model.Model;
 
 public class AddOrEditFragment extends Fragment {
 
+    private final int DIALPAD_INDEX = 0;
+    private final int CONTACT_INDEX = 2;
+    private final int FAVORITES_INDEX = 3;
+
     Contacts contact = new Contacts();
     TextView titleText;
     EditText phoneNumberText, firstNameText, emailText;
-    String phoneNumber;
     Switch addToFav;
 
     @Override
@@ -45,68 +48,59 @@ public class AddOrEditFragment extends Fragment {
         //Change the fragment to the relevant style.
         openFragment(phoneNumber, fromFrag, position);
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        saveBtn.setOnClickListener(v -> {
+//            setContact(firstNameText.getText().toString(), phoneNumberText.getText().toString(), emailText.getText().toString(), addToFav.isChecked());
 
-                setContact(firstNameText.getText().toString(), phoneNumberText.getText().
-                        toString(), emailText.getText().toString(), addToFav.isChecked());
-
-                if (fromFrag == 0 || fromFrag == 1) {
-                    Model.getInstance().saveContact(contact, getContext().getContentResolver());
-                } else {
-                    Model.getInstance().updateContact(contact, getContext().getContentResolver());
-                }
-                Navigation.findNavController(root).navigate(R.id.action_addOrEditFragment_pop);
+            if (fromFrag == 0 || fromFrag == 1) {
+                Model.getInstance().saveContact(contact, getContext().getContentResolver());
+            } else {
+                Model.getInstance().updateContact(contact, getContext().getContentResolver());
             }
+
+            Navigation.findNavController(root).navigate(R.id.action_addOrEditFragment_pop);
         });
 
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(root).navigate(R.id.action_addOrEditFragment_pop);
-            }
-        });
+        cancelBtn.setOnClickListener(v -> Navigation.findNavController(root).navigate(R.id.action_addOrEditFragment_pop));
 
         return root;
     }
 
     //Set contact with update data
-    public Contacts setContact(String name, String phone, String email, Boolean isFav) {
+    public void setContact(String name, String phone, String email, boolean isFav) {
         contact.setFullName(name);
         contact.setPhoneNumber(phone);
         contact.setEmail(email);
         contact.setFavorite(isFav);
-        return contact;
     }
 
     //Change the fragment to the relevant style.
     public void openFragment(String phoneNumber, int fromFrag, int position) {
-
         //Check if need to open add frag or edit Frag.
-        if (phoneNumber == null) {
+        if (fromFrag == 0 || fromFrag == 1) {
             titleText.setText("Add new contact: ");
-        } else {
-            if (fromFrag == 0) {
-                titleText.setText("Add new contact: ");
+
+            if (phoneNumber != null) {
                 phoneNumberText.setText(phoneNumber);
-            } else {
-                titleText.setText("Edit contact");
-                //Check if open from contacts frag or favorites frag.
-                if (fromFrag == 2) {
-                    contact = Model.getInstance().getContactByCount(position);
-                    if (contact.getFavorite()) {
-                        addToFav.setChecked(true);
-                    }
-                } else {
-                    contact = Model.getInstance().getFavContactByCount(position);
+            }
+        } else {
+            //Check if open from contacts frag or favorites frag.
+            if (fromFrag == 2) {
+                contact = Model.getInstance().getContactByCount(position);
+
+                if (contact.getFavorite()) {
                     addToFav.setChecked(true);
                 }
-                //Set textview.
-                firstNameText.setText(contact.getFullName());
-                phoneNumberText.setText(contact.getPhoneNumber());
-                emailText.setText(contact.getEmail());
+            } else {
+                contact = Model.getInstance().getFavContactByCount(position);
+                addToFav.setChecked(true);
             }
+
+            //Set textview.
+            titleText.setText("Edit contact");
+            firstNameText.setText(contact.getFullName());
+            phoneNumberText.setText(contact.getPhoneNumber());
+            emailText.setText(contact.getEmail());
         }
+
     }
 }

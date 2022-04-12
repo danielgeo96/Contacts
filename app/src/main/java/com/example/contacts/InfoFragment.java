@@ -40,7 +40,7 @@ public class InfoFragment extends Fragment {
         Button msgBtn = root.findViewById(R.id.fragment_info_msgBtn);
 
         position = InfoFragmentArgs.fromBundle(getArguments()).getRecivePosParam();
-        Boolean isFav = InfoFragmentArgs.fromBundle(getArguments()).getIsFav();
+        boolean isFav = InfoFragmentArgs.fromBundle(getArguments()).getIsFav();
         int fromFrag = InfoFragmentArgs.fromBundle(getArguments()).getFromFrag();
 
         if (isFav) {
@@ -54,55 +54,40 @@ public class InfoFragment extends Fragment {
         emailTextView.setText(contacts.getEmail());
 
         //Move to edit contact frag
-        editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InfoFragmentDirections.ActionInfoFragmentToAddOrEditFragment action = InfoFragmentDirections.actionInfoFragmentToAddOrEditFragment("", position, fromFrag);
-                Navigation.findNavController(root).navigate(action);
-            }
+        editBtn.setOnClickListener(v -> {
+            InfoFragmentDirections.ActionInfoFragmentToAddOrEditFragment action = InfoFragmentDirections.actionInfoFragmentToAddOrEditFragment("", position, fromFrag);
+            Navigation.findNavController(root).navigate(action);
         });
 
         //Delete contact from db.
-        delBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Model.getInstance().removeContact(contacts, getContext().getContentResolver());
-                Navigation.findNavController(root).navigate(R.id.isRemove);
-            }
+        delBtn.setOnClickListener(v -> {
+            Model.getInstance().removeContact(contacts, getContext().getContentResolver());
+            Navigation.findNavController(root).navigate(R.id.isRemove);
         });
 
         //Call to the contact using intent.
-        callBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + phoneNumberTextView.getText().toString()));//change the number
-                startActivity(callIntent);
-            }
+        callBtn.setOnClickListener(v -> {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" + phoneNumberTextView.getText().toString()));//change the number
+            startActivity(callIntent);
         });
 
         //send email to the contact using intent.
-        emailBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent intent = new Intent(Intent.ACTION_MAIN);
-                    intent.addCategory(Intent.CATEGORY_APP_EMAIL);
-                    startActivity(intent);
-                } catch (android.content.ActivityNotFoundException e) {
-                    Toast.makeText(getContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
-                }
+        emailBtn.setOnClickListener(v -> {
+            try {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_APP_EMAIL);
+                startActivity(intent);
+            } catch (android.content.ActivityNotFoundException e) {
+                Toast.makeText(getContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
             }
         });
 
         //send message to the contact using intent.
-        msgBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_APP_MESSAGING);
-                startActivity(intent);
-            }
+        msgBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_APP_MESSAGING);
+            startActivity(intent);
         });
 
         return root;

@@ -7,7 +7,7 @@ public class Contacts {
     String phoneNumber;
     String fullName;
     String email;
-    Boolean isFavorite = false;
+    boolean isFavorite = false;
     String dbPosition;
     int listPosition;
 
@@ -43,11 +43,11 @@ public class Contacts {
         this.email = email;
     }
 
-    public void setFavorite(Boolean favorite) {
+    public void setFavorite(boolean favorite) {
         isFavorite = favorite;
     }
 
-    public Boolean getFavorite() {
+    public boolean getFavorite() {
         return isFavorite;
     }
 

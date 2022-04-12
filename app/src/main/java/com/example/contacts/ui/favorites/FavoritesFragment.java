@@ -29,15 +29,13 @@ public class FavoritesFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        favoritesViewModel =
-                new ViewModelProvider(this).get(FavoritesViewModel.class);
+        favoritesViewModel = new ViewModelProvider(this).get(FavoritesViewModel.class);
 
         binding = FragmentFavoritesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         //Make list.
         list = root.findViewById(R.id.fragment_favorite_recycler_view);
-        list.hasFixedSize();
 
         //Set list layout manager.
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());

@@ -16,18 +16,14 @@ public class Model {
 
     private final static Model instance = new Model();
 
-    private Model() {
-
-    }
+    private Model() { }
 
     public static Model getInstance() {
-
         return instance;
     }
 
     //Get contacts list from db.
     public List<Contacts> getContentFromDB(ContentResolver contentResolver) {
-
         List<Contacts> tempList = new LinkedList<>();
         int tempDataIndex = 0;
 
@@ -36,7 +32,6 @@ public class Model {
 
         if (contactsCursor.getCount() > 0) {
             while (contactsCursor.moveToNext()) {
-
                 Contacts tempData = new Contacts();
 
                 //set full-name
@@ -44,6 +39,7 @@ public class Model {
 
                 //check if favorite
                 String isFav = contactsCursor.getString(contactsCursor.getColumnIndex(ContactsContract.Contacts.STARRED));
+
                 if (isFav.equals("1")) {
                     tempData.setFavorite(true);
                 }
@@ -77,11 +73,11 @@ public class Model {
                 tempDataIndex++;
             }
         }
+
         contactsCursor.close();
         data = tempList;
         dataIndex = tempDataIndex;
         return data;
-
     }
 
     //Get contact from list by position.
@@ -97,7 +93,6 @@ public class Model {
         int tempFavListIndex = 0;
 
         //if enter favorites before data fix empty list
-
         if (data == null) {
             getContentFromDB(contentResolver);
         }
@@ -140,12 +135,7 @@ public class Model {
         editEmailOrPhone(id,contact.getPhoneNumber(),contentResolver,ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE,ContactsContract.CommonDataKinds.Email.ADDRESS,ContactsContract.CommonDataKinds.Email.TYPE,ContactsContract.CommonDataKinds.Email.TYPE_HOME);
 
         //Check if contact is favorite, if so change in db.
-        if (contact.getFavorite()) {
-            editIsFav(id,true,contentResolver);
-        }else {
-            editIsFav(id,false,contentResolver);
-        }
-
+        editIsFav(id, contact.getFavorite(), contentResolver);
     }
 
     //Update contacts using save and delete.
@@ -181,7 +171,7 @@ public class Model {
     }
 
     //Edit isFav.
-    private void editIsFav(long id,Boolean isFav,ContentResolver contentResolver){
+    private void editIsFav(long id,boolean isFav,ContentResolver contentResolver){
         ContentValues contentValues = new ContentValues();
         contentValues.put(ContactsContract.Contacts.STARRED, isFav);
         contentResolver.update(ContactsContract.Contacts.CONTENT_URI, contentValues, ContactsContract.Contacts._ID + "=" + id, null);
